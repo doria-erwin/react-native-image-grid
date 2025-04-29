@@ -7,23 +7,54 @@ import { checkLayoutImage, LAYOUT_ROW } from './helpers';
 
 const { width: windowWidth } = Dimensions.get('window');
 
-export const ImageGridContext = createContext({});
+// Create context with default values
+export const ImageGridContext = createContext({
+  dataImage: [],
+  colorLoader: [
+    '#fcf8e8',
+    '#d4e2d4',
+    '#ecb390',
+    '#df7861',
+    '#dff3e3',
+    '#86aba1',
+    '#f4eeed',
+  ],
+  sourceKey: 'url',
+  videoURLKey: 'url',
+  width: windowWidth,
+  spaceSize: 3,
+  activeOpacity: 0.9,
+  maximum: 6,
+  backgroundMask: 'rgba(0,0,0,0.6)',
+  backgroundMaskVideo: 'rgba(0,0,0,0.6)',
+  videoKey: 'isVideo',
+  conditionCheckVideo: true,
+  heightKey: 'height',
+  widthKey: 'width',
+  onPressImage: () => { },
+  emptyImageSource: require('./assets/emptyImage.png'),
+  showDelete: false,
+  onDeleteImage: () => { },
+  ratioImagePortrait: 1.618,
+  ratioImageLandscape: 1.2,
+  prefixPath: '',
+  backgroundColorKey: 'backgroundColor',
+  ImageWrap: Image,
+});
 
 export function ImageGrid(props: InferProps<typeof ImageGrid.propTypes>) {
   const { dataImage, widthKey, heightKey } = props;
-
   const maximum = props.maximum as number;
 
   const data = [...dataImage];
   const length = maximum > data.length ? data.length : maximum;
   const remain = data.length - length;
   data.length = length > 6 ? 6 : length;
-  const layout =
-    checkLayoutImage(data, length, widthKey, heightKey) || LAYOUT_ROW;
+  const layout = checkLayoutImage(data, length, widthKey, heightKey) || LAYOUT_ROW;
 
   const value = {
-    ...props,
-    //props
+    ...ImageGrid.defaultProps, // Spread default props first
+    ...props, // Then spread passed props to override defaults
     layout,
     length,
     remain,
@@ -92,10 +123,10 @@ ImageGrid.defaultProps = {
   conditionCheckVideo: true,
   heightKey: 'height',
   widthKey: 'width',
-  onPressImage: () => {},
+  onPressImage: () => { },
   emptyImageSource: require('./assets/emptyImage.png'),
   showDelete: false,
-  onDeleteImage: () => {},
+  onDeleteImage: () => { },
   ratioImagePortrait: 1.618,
   ratioImageLandscape: 1.2,
   prefixPath: '',
