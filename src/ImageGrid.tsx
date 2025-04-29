@@ -1,6 +1,6 @@
 import React, { createContext } from 'react';
 import { Dimensions, Image } from 'react-native';
-import PropTypes, { InferProps } from 'prop-types';
+import PropTypes from 'prop-types';
 
 import Grid from './Grid.js';
 import { checkLayoutImage, LAYOUT_ROW } from './helpers';
