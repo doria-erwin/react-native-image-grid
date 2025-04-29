@@ -7,8 +7,38 @@ import { checkLayoutImage, LAYOUT_ROW } from './helpers';
 
 const { width: windowWidth } = Dimensions.get('window');
 
+interface ImageGridContextType {
+  dataImage: any[];
+  colorLoader: string[];
+  sourceKey: string;
+  videoURLKey: string;
+  width: number;
+  spaceSize: number;
+  activeOpacity: number;
+  maximum: number;
+  backgroundMask: string;
+  backgroundMaskVideo: string;
+  videoKey: string;
+  conditionCheckVideo: boolean;
+  heightKey: string;
+  widthKey: string;
+  onPressImage: () => void;
+  emptyImageSource: any;
+  showDelete: boolean;
+  onDeleteImage: () => void;
+  ratioImagePortrait: number;
+  ratioImageLandscape: number;
+  prefixPath: string;
+  backgroundColorKey: string;
+  ImageWrap: React.ComponentType<any>;
+  layout?: string;
+  length?: number;
+  remain?: number;
+  data?: any[];
+}
+
 // Create context with default values
-export const ImageGridContext = createContext({
+export const ImageGridContext = createContext<ImageGridContextType>({
   dataImage: [],
   colorLoader: [
     '#fcf8e8',
@@ -42,9 +72,38 @@ export const ImageGridContext = createContext({
   ImageWrap: Image,
 });
 
-export function ImageGrid(props: InferProps<typeof ImageGrid.propTypes>) {
+interface ImageGridProps {
+  dataImage: any[];
+  sourceKey?: string;
+  width?: number;
+  colorLoader?: string[];
+  spaceSize?: number;
+  containerStyle?: any;
+  activeOpacity?: number;
+  maximum?: number;
+  onPressImage?: () => void;
+  backgroundMask?: string;
+  backgroundMaskVideo?: string;
+  numberRemainStyle?: any;
+  videoIconStyle?: any;
+  videoKey?: string;
+  videoURLKey?: string;
+  conditionCheckVideo?: boolean;
+  heightKey?: string;
+  widthKey?: string;
+  componentDelete?: React.ReactElement;
+  onDeleteImage?: () => void;
+  showDelete?: boolean;
+  ratioImagePortrait?: number;
+  ratioImageLandscape?: number;
+  prefixPath?: string;
+  backgroundColorKey?: string;
+  ImageWrap?: React.ComponentType<any>;
+}
+
+export function ImageGrid(props: ImageGridProps) {
   const { dataImage, widthKey, heightKey } = props;
-  const maximum = props.maximum as number;
+  const maximum = props.maximum ?? 6;
 
   const data = [...dataImage];
   const length = maximum > data.length ? data.length : maximum;
@@ -52,9 +111,9 @@ export function ImageGrid(props: InferProps<typeof ImageGrid.propTypes>) {
   data.length = length > 6 ? 6 : length;
   const layout = checkLayoutImage(data, length, widthKey, heightKey) || LAYOUT_ROW;
 
-  const value = {
-    ...ImageGrid.defaultProps, // Spread default props first
-    ...props, // Then spread passed props to override defaults
+  const value: ImageGridContextType = {
+    ...ImageGrid.defaultProps,
+    ...props,
     layout,
     length,
     remain,
